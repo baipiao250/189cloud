@@ -25,13 +25,17 @@
 ### 设置工作流权限
 
 将 Settings -> Actions -> Workflow permissions 改成 Read and write permissions
+
 ![](https://github.com/user-attachments/assets/28d27a78-73f2-489e-aa7e-cac87c0fc509)
 
 ### 设置账号密码
 
 新版本的 git Action 需要创建 environment 来配合使用，创建一个名为 user 的环境,添加变量TY_ACCOUNTS userName 和 password 为你的天翼账号和密码,可以添加多个账号如[{"userName":"账号 1","password":"账号 1 的密码"},{"userName":"账号 2","password":"账号 2 的密码"}]
+
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/env.png)
+
 创建好后编辑 user 环境，添加变量 TY_ACCOUNTS
+
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/accounts.jpg)
 
 如果你遇到你账号密码中有特殊字符如#$等无法解析的[SyntaxError](https://github.com/wes-lin/Cloud189Checkin/issues/76),请在你的配置中将TY_ACCOUNTS用单引号包起来
@@ -47,15 +51,20 @@
 目前电信的家庭签到可以将子账号的签到奖励叠加到主账号上,首先你需要把子账号都加入到你的主账号家庭组中,然后配置该环境变量.
 - `TY_FAMILIES` 需要签到的主账号家庭名称,可以添加多个主账号如["18xxxxx","17xxxx"]
 例如目前我的家庭组是18xxxxx,目前有三个账号,那么这个三个账号签到奖励都会汇集到主账号上, TY_FAMILIES 需要配置成["189xxxxx"],注意是你的家庭组的全名,我这里这是一个例子,因为客户端会将你名称打星号处理了,所以你要点app上的编辑家庭名称,来获取完整名称然后填到该变量上.
+
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/families.jpg)
 
+---
 
 ## 设置推送
 
 ### Server 酱
 
 为了考虑到不同客户端兼容性,采用了 Server 酱,只需多配置下 SENDKEY
-![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/push.png)就行,Server 酱的配置和 sendkey 的获取可参看[Server 酱官网](https://sct.ftqq.com/)
+
+![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/push.png)
+
+就行,Server 酱的配置和 sendkey 的获取可参看[Server 酱官网](https://sct.ftqq.com/)
 
 ### TelegramBot 推送
 
@@ -75,6 +84,7 @@
   默认使用是我的 WxPusher,你也可以改成你自己 wxPusher 开发者账户,修改 WX_PUSHER_APP_TOKEN. 如果想直接使用我的 wxPush 应用,请扫描底下二维码进行关联.
   https://wxpusher.zjiecode.com/api/qrcode/4Ix7noqD3L7DMBoSlvig3t4hqjFWzPkdHqAYsg8IzkPreW7d8uGUHi9LJO4EcyJg.jpg
   然后拿到 UID 后,把 WX_PUSHER_UID 配成你拿到的 UID.
+  
   ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/wxpusher.jpg)
 
 ### PushPlus 推送
@@ -103,12 +113,14 @@
 
 1. 点击**Action**，再点击**I understand my workflows, go ahead and enable them**
 2. 给自己仓库点个 start 或者修改任意文件后提交一次或者手动点击运行
-   ![](http://tu.yaohuo.me/imgs/2020/06/34ca160c972b9927.png)
+![](http://tu.yaohuo.me/imgs/2020/06/34ca160c972b9927.png)
+
 3. 每天早上 10:35 点执行任务
 
 ### 查看运行结果
 
 Actions > Cloud check in action > build
+
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/action.png)
 
 ## 本地运行
@@ -151,8 +163,14 @@ npm start
 
 ### [教程](doc/xuanwu)
 
+---
+
 ## 其他环境集成
 
 我已经把天翼网盘的相关 API 集成到 [SDK](https://github.com/wes-lin/cloud189-sdk) 了，有编程能力的同学可以自行拓展，集成到自己的代码环境。
 
+---
+
 ## [更新内容](https://github.com/wes-lin/Cloud189Checkin/wiki/更新内容)
+
+---
