@@ -1,25 +1,23 @@
 require("dotenv").config();
-const fs = require('fs')
-const { CloudClient,FileTokenStore } = require("cloud189-sdk");
+const fs = require("fs");
+const { CloudClient, FileTokenStore } = require("cloud189-sdk");
 const recording = require("log4js/lib/appenders/recording");
 const accounts = require("../accounts");
 const families = require("../families");
-const {
-  mask,
-  delay,
-} = require("./utils");
+const { mask, delay } = require("./utils");
 const push = require("./push");
 const { log4js, cleanLogs, catLogs } = require("./logger");
 const execThreshold = process.env.EXEC_THRESHOLD || 1;
-const cacheToken =  process.env.CACHE_TOKEN === "1";
-const tokenDir = ".token"
+const tokenDir = ".token";
 
 // 个人任务签到
 const doUserTask = async (cloudClient, logger) => {
   const tasks = Array.from({ length: execThreshold }, () =>
     cloudClient.userSign()
   );
-  const result = (await Promise.allSettled(tasks)).filter(({status,value })=> status ==='fulfilled' && !value.isSign);
+  const result = (await Promise.allSettled(tasks)).filter(
+    ({ status, value }) => status === "fulfilled" && !value.isSign && value.netdiskBonus
+  );
   logger.info(
     `个人签到任务: 成功数/总请求数 ${result.length}/${tasks.length} 获得 ${
       result.map(({ value }) => value.netdiskBonus)?.join(",") || "0"
@@ -50,12 +48,12 @@ const doFamilyTask = async (cloudClient, logger) => {
       familyId = familyInfoResp[0].familyId;
     }
     logger.info(`执行家庭签到ID:${familyId}`);
-    const tasks = Array.from({ length: execThreshold }, () =>
-      cloudClient.familyUserSign(familyId)
+    const tasks = [ cloudClient.familyUserSign(familyId) ]
+    const result = (await Promise.allSettled(tasks)).filter(
+      ({ status, value }) => status === "fulfilled" && !value.signStatus && value.bonusSpace
     );
-    const result = (await Promise.allSettled(tasks)).filter(({ status, value })=> status ==='fulfilled' && !value.signStatus);
     return logger.info(
-      `家庭签到任务: 成功数/总请求数 ${result.length}/${tasks.length} 获得 ${
+      `家庭签到任务: 获得 ${
         result.map(({ value }) => value.bonusSpace)?.join(",") || "0"
       }M 空间`
     );
@@ -66,15 +64,11 @@ const run = async (userName, password, userSizeInfoMap, logger) => {
   if (userName && password) {
     const before = Date.now();
     try {
-      logger.log('开始执行');
-      let token = null
-      if(cacheToken) {
-        token = new FileTokenStore(`${tokenDir}/${userName}.json`)
-      }
+      logger.log("开始执行");
       const cloudClient = new CloudClient({
-        username: userName, 
+        username: userName,
         password,
-        token: token
+        token: new FileTokenStore(`${tokenDir}/${userName}.json`),
       });
       const beforeUserSizeInfo = await cloudClient.getUserSizeInfo();
       userSizeInfoMap.set(userName, {
@@ -106,8 +100,8 @@ const run = async (userName, password, userSizeInfoMap, logger) => {
 
 // 开始执行程序
 async function main() {
-  if(cacheToken && !fs.existsSync(tokenDir)){
-    fs.mkdirSync(tokenDir)
+  if (!fs.existsSync(tokenDir)) {
+    fs.mkdirSync(tokenDir);
   }
   //  用于统计实际容量变化
   const userSizeInfoMap = new Map();
@@ -121,20 +115,34 @@ async function main() {
   }
 
   //数据汇总
-  for (const [userName, { cloudClient, userSizeInfo, logger } ] of userSizeInfoMap) {
+  for (const [
+    userName,
+    { cloudClient, userSizeInfo, logger },
+  ] of userSizeInfoMap) {
     const afterUserSizeInfo = await cloudClient.getUserSizeInfo();
     logger.log(
-      `个人总容量增加：${(
+      `个人容量：⬆️  ${(
         (afterUserSizeInfo.cloudCapacityInfo.totalSize -
           userSizeInfo.cloudCapacityInfo.totalSize) /
         1024 /
         1024
-      ).toFixed(2)}M,家庭容量增加：${(
+      ).toFixed(2)}M/${(
+        afterUserSizeInfo.cloudCapacityInfo.totalSize /
+        1024 /
+        1024 /
+        1024
+      ).toFixed(2)}G`,
+      `家庭容量：⬆️  ${(
         (afterUserSizeInfo.familyCapacityInfo.totalSize -
           userSizeInfo.familyCapacityInfo.totalSize) /
         1024 /
         1024
-      ).toFixed(2)}M`
+      ).toFixed(2)}M/${(
+        afterUserSizeInfo.familyCapacityInfo.totalSize /
+        1024 /
+        1024 /
+        1024
+      ).toFixed(2)}G`
     );
   }
 }
