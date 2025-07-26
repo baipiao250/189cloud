@@ -1,6 +1,6 @@
 # Cloud189Checkin
 
-天翼网盘自动签到（随机容量），家庭空间签到（随机容量）。
+天翼网盘自动签到（随机容量），~~家庭空间签到（随机容量）~~。
 
 # 重要说明！！！
 
@@ -25,17 +25,13 @@
 ### 设置工作流权限
 
 将 Settings -> Actions -> Workflow permissions 改成 Read and write permissions
-
 ![](https://github.com/user-attachments/assets/28d27a78-73f2-489e-aa7e-cac87c0fc509)
 
 ### 设置账号密码
 
 新版本的 git Action 需要创建 environment 来配合使用，创建一个名为 user 的环境
-
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/env.png)
-
 创建好后编辑 user 环境，添加变量 TY_ACCOUNTS userName 和 password 为你的天翼账号和密码,可以添加多个账号如[{"userName":"账号 1","password":"账号 1 的密码"},{"userName":"账号 2","password":"账号 2 的密码"}]
-
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/accounts.jpg)
 
 如果你遇到你账号密码中有特殊字符如#$等无法解析的[SyntaxError](https://github.com/wes-lin/Cloud189Checkin/issues/76),请在你的配置中将TY_ACCOUNTS用单引号包起来
@@ -43,28 +39,16 @@
 
 ### 设置签到并发值
 
-目前发现电信的签到, 在同时发送请求时, 能同时获取到奖励,这bug在个人和~~家庭~~的签到任务同样有生效. 但是这是具有一定风险性, 并且获取到奖励是不固定的,请谨慎使用.如果因为使用该脚本出现账号异常,本人概不负责. 设置环境变量 EXEC_THRESHOLD 默认是不开启, 默认签到执行一次,如设置建议并发数为5.
+目前发现电信的签到, 在同时发送请求时, 能同时获取到奖励,这 bug 在个人和~~家庭~~的签到任务同样有生效. 但是这是具有一定风险性, 并且获取到奖励是不固定的,请谨慎使用.如果因为使用该脚本出现账号异常,本人概不负责. 设置环境变量 EXEC_THRESHOLD 默认是不开启, 默认签到执行一次,如设置建议并发数为 5.
+
 - `EXEC_THRESHOLD` 同时签到的最大进程数
-
-### 设置家庭签到
-
-目前电信的家庭签到可以将子账号的签到奖励叠加到主账号上,首先你需要把子账号都加入到你的主账号家庭组中,然后配置该环境变量.
-- `TY_FAMILIES` 需要签到的主账号家庭名称,可以添加多个主账号如["18xxxxx","17xxxx"]
-例如目前我的家庭组是18xxxxx,目前有三个账号,那么这个三个账号签到奖励都会汇集到主账号上, TY_FAMILIES 需要配置成["189xxxxx"],注意是你的家庭组的全名,我这里这是一个例子,因为客户端会将你名称打星号处理了,所以你要点app上的编辑家庭名称,来获取完整名称然后填到该变量上.
-
-![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/families.jpg)
-
----
 
 ## 设置推送
 
 ### Server 酱
 
 为了考虑到不同客户端兼容性,采用了 Server 酱,只需多配置下 SENDKEY
-
-![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/push.png)
-
-就行,Server 酱的配置和 sendkey 的获取可参看[Server 酱官网](https://sct.ftqq.com/)
+![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/push.png)就行,Server 酱的配置和 sendkey 的获取可参看[Server 酱官网](https://sct.ftqq.com/)
 
 ### TelegramBot 推送
 
@@ -84,7 +68,6 @@
   默认使用是我的 WxPusher,你也可以改成你自己 wxPusher 开发者账户,修改 WX_PUSHER_APP_TOKEN. 如果想直接使用我的 wxPush 应用,请扫描底下二维码进行关联.
   https://wxpusher.zjiecode.com/api/qrcode/4Ix7noqD3L7DMBoSlvig3t4hqjFWzPkdHqAYsg8IzkPreW7d8uGUHi9LJO4EcyJg.jpg
   然后拿到 UID 后,把 WX_PUSHER_UID 配成你拿到的 UID.
-  
   ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/wxpusher.jpg)
 
 ### PushPlus 推送
@@ -101,13 +84,13 @@
 - 打开官网，关注公众号，拿到 key 后，把 SHOWDOC_KEY 配成你拿到的 key
 - 使用简单、开箱可用、长期维护、持续免费、编程可玩、不限制消息数量、不限制请求数
 
-### Bark 推送 (仅支持 iPhone、iPad、M芯片Mac)
+### Bark 推送 (仅支持 iPhone、iPad、M 芯片 Mac)
 
 - `BARK_KEY ` _Bark 推送 key_
 - Bark 官网：https://bark.day.app/
-- 安装Bark app，开启通知权限，拿到 key 后，把 BARK_KEY 配成你拿到的 key
-- `可选` 支持自定义server, 配置成 BARK_SERVER ，默认为官方通道 https://api.day.app
-- 免费、开源、轻量；使用苹果APNS服务，及时、稳定、可靠；不会消耗设备的电量，基于系统推送服务与推送扩展，app本体并不需要运行；隐私安全，可以通过一些方式确保包含作者本人在内的所有人都无法窃取你的隐私
+- 安装 Bark app，开启通知权限，拿到 key 后，把 BARK_KEY 配成你拿到的 key
+- `可选` 支持自定义 server, 配置成 BARK_SERVER ，默认为官方通道 https://api.day.app
+- 免费、开源、轻量；使用苹果 APNS 服务，及时、稳定、可靠；不会消耗设备的电量，基于系统推送服务与推送扩展，app 本体并不需要运行；隐私安全，可以通过一些方式确保包含作者本人在内的所有人都无法窃取你的隐私
 
 ### 执行任务
 
@@ -119,7 +102,6 @@
 ### 查看运行结果
 
 Actions > Cloud check in action > build
-
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/action.png)
 
 ## 本地运行
@@ -158,20 +140,16 @@ npm install
 npm start
 ```
 
----
-
 ## 玄武-青龙面板
 
 ### [教程](doc/xuanwu)
-
----
 
 ## 其他环境集成
 
 我已经把天翼网盘的相关 API 集成到 [SDK](https://github.com/wes-lin/cloud189-sdk) 了，有编程能力的同学可以自行拓展，集成到自己的代码环境。
 
----
+## 交流群
+
+![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/group.jpg)
 
 ## [更新内容](https://github.com/wes-lin/Cloud189Checkin/wiki/更新内容)
-
----
